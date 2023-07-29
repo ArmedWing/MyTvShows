@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!--Edit Page-->
+<section class="editPage">
+    <form method="post" action="{% url 'edit_show' pk=show.pk %}">
+        <fieldset>
+            <legend>Edit Show</legend>
+            <div class="container">
+                {{ form.as_p }}
+                {{ genre.as_p }}
+                {{ seasons.as_p }}
+                {{ episodes.as_p }}
+                <button class="edit-album" type="submit">Edit Show</button>
+                {% csrf_token %}
+            </div>
+        </fieldset>
+    </form>
+</section>
+{% endblock %}

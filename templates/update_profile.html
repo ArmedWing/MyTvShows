@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section class="createPage">
+        <form method="post" action="{% url 'update_profile' %}">
+            <fieldset>
+                <legend>Update Profile Information</legend>
+                <div class="container">
+                    {{ form.as_p }}
+                    <button class="add-album" type="submit">Save</button>
+                    {% csrf_token %}
+                </div>
+            </fieldset>
+        </form>
+    </section>
+{% endblock %}

@@ -1,0 +1,384 @@
+.card-box {
+    box-shadow: 0 0 30px 0;
+    padding: 20px;
+    margin-left: 100px;
+    background-position: right 35% bottom 45%;
+    box-sizing: border-box;
+    border-radius: 15px;
+    float: left;
+    /*height: 605px;*/
+    color: white;
+    font-weight: bold;
+    margin-bottom: 70px;
+    margin-top: 20px;
+}
+
+.btn-group > a {
+	width: 200%;
+	height: 50px;
+	cursor: pointer;
+	border: none;
+    border-radius: 10px;
+	display: inline;
+	align-items: center;
+	justify-content: center;
+	background-color: #1b2845;
+	background-image: linear-gradient(315deg, #45a29e 0%, #0d324d 74%);
+	background-size: 200% 100%;
+	background-position: left;
+	background-repeat: no-repeat;
+	transition: 500ms;
+    color: white;
+    font-family: "Lato", serif;
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.btn-group > a:hover {
+	background-position: right;
+}
+
+.btn-group > a:before {
+	color: rgba(255,255,255,0.5);
+	font-size: 16px;
+    font-weight: bold;
+    font-family: 'Lato', serif;
+	position: absolute;
+	display: inline;
+	align-items: center;
+	justify-content: center;
+	width: 140px;
+	height: 40px;
+	background-color: #1b2845;
+	background-image: linear-gradient(315deg, #1b2845 0%, #274060 74%);
+	transition: 500ms;
+}
+
+#catalogPage h1{
+    color: white;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 26px;
+    font-family: 'Lato', serif;
+    text-shadow: 5px 2px black;
+}
+
+.card-box > img {
+    display: block;
+    width: 250px;
+    border-radius: 15px;
+
+}
+
+.btn-group {
+    margin: 20px auto 0;
+}
+
+#catalogPage > p {
+    font-size: 40px;
+    color: #45a29e;
+    font-weight: bolder;
+    text-align: center;
+    margin-top: 30px;
+    text-shadow: 2px 2px black solid;
+}
+
+#search > input[type=text] {
+    border-radius: 3px;
+    box-shadow: none;
+    border: 1px solid #384049;
+    background: #15171b;
+    display: block;
+    width: 100%;
+    color: white;
+    transition: all 0.3s ease;
+    font-size: 1.2em;
+    line-height: 1;
+    padding: 0.3em 0.4em;
+    margin: 0 0.5em 1em 0;
+}
+
+#search > input[type=text]::-webkit-input-placeholder{
+    color: #343b44;
+    line-height: 1.2;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+input[type=text]:hover {
+    border-color: #4e5966;
+}
+
+.search {
+    margin: 1em auto;
+    padding: 2em;
+    width: 25em;
+    border-radius: 2px;
+    border-color: #2d333b;
+    background: #1b1f24;
+    box-shadow: 0 2px 2px #131518;
+}
+
+.button-list {
+    width: 150px;
+	height: 50px;
+	cursor: pointer;
+	border: none;
+  border-radius: 10px;
+	display: inline;
+	align-items: center;
+	justify-content: center;
+	background-color: #1b2845;
+	background-image: linear-gradient(315deg, #45a29e 0%, #0d324d 74%);
+	background-size: 200% 100%;
+	background-position: left;
+	background-repeat: no-repeat;
+	transition: 500ms;
+  color: white;
+    font-family: "Lato", serif;
+  font-size: 20px;
+  margin-bottom: 5px;
+  margin-top: 20px;
+}
+
+.search-result .no-result{
+    margin: 1em auto;
+    padding: 2em;
+    width: 25em;
+    align-items: center;
+}
+
+#search-albums h1, h2 {
+    color: black;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 26px;
+    font-family: 'Lato', serif;
+
+}
+
+.search-result .no-result {
+    font-size: 40px;
+    color: #45a29e;
+    font-weight: bolder;
+    text-align: center;
+    margin-top: 30px;
+    text-shadow: 2px 2px black solid;
+}
+
+.search-result .card-box {
+    box-shadow: 0 0 30px 0;
+    background-position: right 35% bottom 45%;
+    box-sizing: border-box;
+    border-radius: 15px;
+    float: left;
+    height: 550px;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 70px;
+    margin-top: 20px;
+
+}
+
+#searchPage > h1 {
+    color: white;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 26px;
+    font-family: 'Lato', serif;
+    text-shadow: 5px 2px black;
+}
+
+.increase-btn{
+    color: white;
+    text-decoration: none;
+    margin-left: 5px;
+    margin-top: 3px;
+    font-size: 22px;
+
+}
+.albumInfo .episodes-watched{
+    display: flex;
+    margin-right: 490px;
+
+}
+
+.threads-info {
+    margin: 20px;
+    overflow-y: auto;
+  }
+
+.threads-info h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.thread-ul {
+    list-style: none;
+    padding: 0;
+}
+
+.thread-li {
+    border: 2px solid dodgerblue;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.thread-li h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: left;
+    border-bottom: 1px solid dimgrey;
+    color: #333; /* Optional: Set a specific color for the heading */
+    font-weight: bold; /* Optional: Set the font weight to bold */
+}
+
+.thread-li h3 {
+    border-bottom: 1px solid dimgrey;
+    position: absolute;
+}
+
+.thread-li h4{
+    padding-top: 40px;
+    padding-bottom: 50px;
+}
+
+.thread-li p {
+    margin: 5px 0;
+    border-bottom: 2px solid grey;
+}
+
+.thread-li a {
+    color: white;
+    background-color: #007bff;
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+.thread-li a:hover {
+    text-decoration: underline;
+}
+
+
+.threads-view  {
+    margin: 20px;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+  }
+
+/* Styles for the thread title */
+.threads-view  h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Styles for the thread author */
+.threads-view  h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Styles for the thread content */
+.threads-view  h4 {
+    padding-top: 10px;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+/* Styles for the created date */
+.threads-view  p {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* Styles for the replies heading */
+.threads-view  h3.replies-heading {
+    font-size: 18px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Styles for the replies list */
+.threads-view  ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Styles for each reply */
+.threads-view  li {
+    margin-bottom: 15px;
+}
+
+/* Styles for the "Add Reply" link */
+.threads-view a {
+    margin-top: 8px;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.threads-view  a:hover {
+    background-color: #0056b3;
+    text-decoration: underline;
+}
+
+.replies-info {
+    border: 2px solid black;
+    padding-left: 8px;
+}
+
+.replies-h3 {
+    text-decoration: underline;
+}
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    color: #007bff;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    margin: 0 5px;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination .current {
+    font-weight: bold;
+    color: #007bff;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    margin: 0 2px;
+}
+
+/*.shows-info-div {*/
+/*    margin: 20px auto;*/
+/*}*/

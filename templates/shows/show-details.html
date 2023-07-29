@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!--Details Page-->
+<section id="detailsPage">
+    <div class="wrapper">
+
+        <div class="albumCover">
+            <!-- Show Image -->
+            <img src="{{ show.image_url }}" alt="Cover Image">
+        </div>
+
+        <div class="albumInfo">
+
+            <div class="albumText">
+                <!-- Show Info -->
+                <h1>Name: {{ show.name }}</h1>
+                <h4>Genre: {{ genre.genre }}</h4>
+                <h4>Seasons: {{ season.number }}</h4>
+                <div class="episodes-watched">
+                    <h4>Ep. watched: {{ episode.episodes_watched }}</h4>
+                    <a href="{% url 'Increase-Counter' pk=show.pk %}" class="increase-btn">+</a>
+                </div>
+
+                <p>Description: {{ show.description }}</p>
+            </div>
+
+            <div class="albumText">
+                {% for rev in reviews %}
+                <!-- Review Info -->
+                    <h2>Reviews</h2>
+                    <h4>Author: {{ rev.author }}</h4>
+                    <h4>Rating: {{ rev.rating }}</h4>
+                    <h4>Comment: {{ rev.comment }}</h4>
+                    <a href="{% url 'DeleteReview' pk=rev.pk %}" class="increase-btn">Delete Review</a>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="actionBtn">
+                <!-- Buttons -->
+                <a href="{% url 'add_review' pk=show.pk %}" class="edit">Add Review</a>
+                <a href="{% url 'edit_show' pk=show.pk %}" class="edit">Edit</a>
+                <a href="{% url 'delete_show' pk=show.pk %}" class="remove">Delete</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

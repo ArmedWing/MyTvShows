@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section class="createPage">
+        <form method="post" action="{% url 'create_thread' %}">
+            <fieldset>
+                <legend>Create Thread</legend>
+                <div class="container">
+                    {{ form }}
+                    <button class="add-album" type="submit">Add New Thread</button>
+                    {% csrf_token %}
+                </div>
+            </fieldset>
+        </form>
+    </section>
+{% endblock %}

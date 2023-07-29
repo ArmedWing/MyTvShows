@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <fieldset>
+        <legend>Login</legend>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="login-btn">Login</button>
+        </form>
+    </fieldset>
+{% endblock %}

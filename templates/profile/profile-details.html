@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!--Details Page-->
+<section id="detailsPage">
+    <div class="wrapper">
+        <div class="profilePage">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                 alt="Profile Image">
+        </div>
+
+            <h2>Profile Information</h2>
+            <p>Username: {{ user.username }}</p>
+            <p>First Name: {{ user.first_name }}</p>
+            <p>Last Name: {{ user.last_name }}</p>
+            <p>Shows added: {{ shows_length }}</p>
+
+
+        <div class="actionBtn">
+            <!-- Button for Deleting the Profile -->
+            <a href="{% url 'update_profile' %}" class="remove">Update</a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

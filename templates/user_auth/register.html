@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <fieldset>
+        <legend>Register</legend>
+        <form action="{% url 'register_user' %}" method="post" class="register-form">
+        {{ form }}
+            <div class="button-group">
+                <button class="register-btn">Register</button>
+                <span class="or-text">or</span>
+                <a href="{% url 'login_user' %}" class="login-link">Login</a>
+            </div>
+        {% csrf_token %}
+        </form>
+    </fieldset>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="editPage">
+    <form method="post" action="{% url 'add_review' pk=show.pk %}">
+        <fieldset>
+            <legend>Add review</legend>
+            <div class="container">
+                {{ form }}
+                <button class="edit-album" type="submit">Add Review</button>
+                {% csrf_token %}
+            </div>
+        </fieldset>
+    </form>
+</section>
+
+{% endblock %}

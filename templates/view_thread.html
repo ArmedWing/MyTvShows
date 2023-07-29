@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!--Details Page-->
+
+        <div class="threads-view">
+
+            <h2>{{ thread.title }}</h2>
+            <h3>Author: {{ thread.author }}</h3>
+            <h4>{{ thread.content }}</h4>
+            <p>Created at: {{ thread.created_at }}</p>
+
+            {% if replies %}
+
+            <div class="replies-info">
+                <h3 class="replies-h3">Replies</h3>
+            <ul>
+                {% for reply in replies %}
+                <li>
+                    <h3>Author: {{ reply.author }}</h3>
+                    <h4>{{ reply.content }}</h4>
+                    <p>Created at: {{ thread.created_at }}</p>
+
+                </li>
+                {% endfor %}
+            </ul>
+
+            </div>
+            {% endif %}
+
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'create_reply' thread_id=thread.id %}">Add Reply</a>
+            {% endif %}
+
+        </div>
+
+{% endblock %}

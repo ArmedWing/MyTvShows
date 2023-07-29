@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section class="createPage">
+        <form method="post" action="{% url 'edit_user' user.id %}">
+            <fieldset>
+                <legend>Edit User: {{ user.username }}</legend>
+                <div class="container">
+                {% for field in form %}
+                    {{ field.label_tag }}<br>
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <p style="color: red">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                    <input class="add-album" type="submit" value="Save Changes">
+                    {% csrf_token %}
+                </div>
+            </fieldset>
+        </form>
+    </section>
+{% endblock %}

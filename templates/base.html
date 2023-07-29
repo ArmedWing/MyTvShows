@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>My TV Shows</title>
+    <!-- Static Load -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+</head>
+
+<body id="bg" style="background-image: url('{% static "images/paper-background.jpg"%}')">
+<div id="box">
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav>
+            <img src="{% static 'images/header-icon.jpg' %}" alt="headphones">
+
+            {% if not user.is_authenticated %}
+                <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'thread_detail' %}">Forum</a>
+                <a href="{% url 'register_user' %}">Register</a>
+                <a href="{% url 'login_user' %}">Login</a>
+{#            {% endif %}#}
+
+            {% elif request.user.is_superuser %}
+                <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'add_show' %}">Add Show</a>
+                <a href="{% url 'thread_detail' %}">Forum</a>
+                <a href="{% url 'create_thread' %}">Create Thread</a>
+                <a href="{% url 'users_info' %}">Users Info</a>
+                <a href="{% url 'shows_info' %}">Shows Info</a>
+                <a href="{% url 'details_profile' %}">Profile</a>
+                <a href="{% url 'logout_user' %}">Logout</a>
+
+{#            {% endif %}#}
+
+{#            {% if user.is_authenticated and not user.is_superuser %}#}
+                {% else %}
+                <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'add_show' %}">Add Show</a>
+                <a href="{% url 'thread_detail' %}">Forum</a>
+                <a href="{% url 'create_thread' %}">Create Thread</a>
+                <a href="{% url 'details_profile' %}">Profile</a>
+                <a href="{% url 'logout_user' %}">Logout</a>
+
+            {% endif %}
+
+        </nav>
+    </header>
+    <!-- End Navigation Bar -->
+ <!-- Main Content -->
+    {% block content %}
+    {% endblock %}
+    <!-- Footer -->
+    <footer>
+        <div>
+            All rights reserved. Plamen Sotirov
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+</div>
+</body>
+</html>
