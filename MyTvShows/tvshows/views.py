@@ -9,6 +9,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic, View
 from django.views.generic import CreateView, UpdateView, DetailView
+from imdb import IMDb
+
 from MyTvShows.tvshows.forms import ShowCreateForm, ShowDeleteForm, ShowEditForm, \
     ProfileEditForm, ShowReviewForm, ShowGenreForm, ShowSeasonForm, ShowEpisodesForm, ThreadForm, ReplyForm, \
     UserEditForm, CustomUserCreationForm
@@ -313,6 +315,10 @@ def shows_info(request):
     return render(request, 'core/shows-info.html', context)
 
 def index(request):
+    ia = IMDb()
+    latest_tv_shows = ia.get_keyword('Marvel', results=5)
+    latest_tv_show_titles = [show['title'] for show in latest_tv_shows]
+
     shows = get_shows(request)
     episodes = Episode.objects.all()
 
@@ -334,6 +340,7 @@ def index(request):
         'current_user': current_user,
         'users': users,
         'episodes': episodes,
+        'latest_tv_show_titles': latest_tv_show_titles,
     }
 
     return render(request, 'core/home-page.html', context)

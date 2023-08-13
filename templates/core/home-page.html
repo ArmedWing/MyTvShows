@@ -45,6 +45,13 @@
         {% else %}
             <h1 style="text-align: center; font-size: 50px">Please Register or Login to your account!</h1>
             <h2>You can also check out our forum!</h2>
+        <div style="text-align: center; padding-top: 35px">
+            <h1>Latest 5 marvel shows/movies</h1>
+            {% for show in latest_tv_show_titles %}
+                <p style="font-size: 24px">{{ show }}</p>
+            {% endfor %}
+        </div>
+
     {% endif %}
 
 </div>
