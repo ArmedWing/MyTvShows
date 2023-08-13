@@ -176,7 +176,7 @@ class Episode(models.Model):
         editable=True,
     )
 
-    episode_number = models.PositiveIntegerField
+    episode_number = models.PositiveIntegerField()
 
 class Season(models.Model):
     series = models.ForeignKey(
