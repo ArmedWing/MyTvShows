@@ -26,17 +26,14 @@ class ReviewAdmin(admin.ModelAdmin):
 admin.site.register(Review, ReviewAdmin)
 
 
-class ReplyInline(admin.StackedInline):
-    model = Reply
-
 class ThreadAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'created_at')
     search_fields = ('title', 'author__username')
     date_hierarchy = 'created_at'
-    inlines = [ReplyInline]
+
 
 admin.site.register(Thread, ThreadAdmin)
-admin.site.register(Reply)
+
 
 
 class EpisodeAdmin(admin.ModelAdmin):
@@ -45,3 +42,12 @@ class EpisodeAdmin(admin.ModelAdmin):
     search_fields = ('title', 'description', 'series__name')
 
 admin.site.register(Episode, EpisodeAdmin)
+
+
+class ReplyAdmin(admin.ModelAdmin):
+    list_display = ('author', 'thread', 'content' )
+    list_filter = ('author', 'thread')
+    search_fields = ('author', 'thread')
+
+
+admin.site.register(Reply, ReplyAdmin)
