@@ -1,13 +1,14 @@
 from django.contrib.auth import  login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import  AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import F
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic, View
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView, DetailView
 from MyTvShows.tvshows.forms import ShowCreateForm, ShowDeleteForm, ShowEditForm, \
     ProfileEditForm, ShowReviewForm, ShowGenreForm, ShowSeasonForm, ShowEpisodesForm, ThreadForm, ReplyForm, \
     UserEditForm, CustomUserCreationForm
@@ -133,24 +134,32 @@ class AddShowView(View):
         return render(request, 'shows/add-show.html', context)
 
 
-class ShowDetailsView(View):
-    def get(self, request, pk):
-        show = get_object_or_404(Show, pk=pk)
 
-        review = Review.objects.filter(series_id=pk).first()
-        reviews = Review.objects.filter(series_id=pk)
 
-        show_genre = Genre.objects.filter(series_id=pk).first()
-        genre = show.genre_set.first()
+class ShowDetailsView(DetailView):
+    model = Show
+    def dispatch(self, request, *args, **kwargs):
+        self.show = self.get_object(queryset=None)
+        if request.user != self.show.user:
+            return redirect('index')
+        return super().dispatch(request, *args, **kwargs)
 
-        show_season = Season.objects.filter(series_id=pk).first()
-        season = show.season_set.first()
+    def get(self, request, *args, **kwargs):
 
-        show_episode = Episode.objects.filter(series_id=pk).first()
-        episode = show.episode_set.first()
+        review = Review.objects.filter(series_id=self.show.pk).first()
+        reviews = Review.objects.filter(series_id=self.show.pk)
+
+        show_genre = Genre.objects.filter(series_id=self.show.pk).first()
+        genre = self.show.genre_set.first()
+
+        show_season = Season.objects.filter(series_id=self.show.pk).first()
+        season = self.show.season_set.first()
+
+        show_episode = Episode.objects.filter(series_id=self.show.pk).first()
+        episode = self.show.episode_set.first()
 
         context = {
-            'show': show,
+            'show': self.show,
             'review': review,
             'reviews': reviews,
             'show_genre': show_genre,

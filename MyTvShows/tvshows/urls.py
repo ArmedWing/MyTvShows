@@ -1,6 +1,6 @@
 from django.urls import path, include
 from MyTvShows.tvshows import views
-from MyTvShows.tvshows.views import index,  delete_show, \
+from MyTvShows.tvshows.views import index, delete_show, \
     delete_profile, RegisterView, LoginUserView, LogoutUserView, profile_info, update_profile, AddShowReview, \
     AddShowView, ShowDetailsView, users_Info, shows_info, create_thread, create_reply, EditShowView
 

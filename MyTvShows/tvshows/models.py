@@ -7,9 +7,9 @@ from MyTvShows.tvshows.validators import check_name_capital_letter
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, AbstractUser
 
 
-
-
 UserModel = get_user_model()
+
+
 class Profile(models.Model):
     user = models.OneToOneField(
         UserModel,
