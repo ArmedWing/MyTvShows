@@ -82,6 +82,9 @@ class Show(models.Model):
         null=True
     )
 
+    def __str__(self):
+        return self.name
+
 class Review(models.Model):
     author = models.CharField(
         max_length=30,
@@ -192,14 +195,6 @@ class Season(models.Model):
         Episode,
 
     )
-
-class SeasonEpisodes(models.Model):
-    season = models.ForeignKey(
-        Season,
-        on_delete=models.CASCADE
-    )
-    num_episodes = models.PositiveIntegerField()
-
 
 class Thread(models.Model):
     title = models.CharField(

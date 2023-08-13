@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
-from MyTvShows.tvshows.models import Profile, Show, Review, Genre, Episode, Season, SeasonEpisodes, Thread, Reply
+from MyTvShows.tvshows.models import Profile, Show, Review, Genre, Episode, Season, Thread, Reply
 
 # admin.site.register(Profile)
 
@@ -37,4 +37,26 @@ class ProfileAdmin(admin.ModelAdmin):
 
 admin.site.register(Profile, ProfileAdmin)
 
+
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('author', 'series', 'rating')
+    list_filter = ('rating', 'series')
+    search_fields = ('author__username', 'series__name')
+
+
+admin.site.register(Review, ReviewAdmin)
+
+
+
+class ReplyInline(admin.StackedInline):
+    model = Reply
+
+class ThreadAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'created_at')
+    search_fields = ('title', 'author__username')
+    date_hierarchy = 'created_at'
+    inlines = [ReplyInline]
+
+admin.site.register(Thread, ThreadAdmin)
+admin.site.register(Reply)
 
