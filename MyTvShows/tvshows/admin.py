@@ -40,7 +40,7 @@ admin.site.register(Reply)
 
 
 class EpisodeAdmin(admin.ModelAdmin):
-    list_display = ('series', 'episode_number')
+    list_display = ('series', 'episodes_watched')
     list_filter = ('series__name',)
     search_fields = ('title', 'description', 'series__name')
 
