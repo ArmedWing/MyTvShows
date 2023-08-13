@@ -34,8 +34,6 @@ class ThreadAdmin(admin.ModelAdmin):
 
 admin.site.register(Thread, ThreadAdmin)
 
-
-
 class EpisodeAdmin(admin.ModelAdmin):
     list_display = ('series', 'episodes_watched')
     list_filter = ('series__name',)
