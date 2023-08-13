@@ -1,11 +1,7 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
 
-from MyTvShows.tvshows.models import Profile, Show, Review, Genre, Episode, Season, Thread, Reply
 
-# admin.site.register(Profile)
+from MyTvShows.tvshows.models import Show, Review, Thread, Reply, Episode
 
 admin.site.site_title = "My Custom Admin"
 admin.site.site_header = "Welcome to My Custom Admin"
@@ -21,23 +17,6 @@ class ShowAdmin(admin.ModelAdmin):
 
 admin.site.register(Show, ShowAdmin)
 
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'username', 'full_name', 'profile_picture')
-    search_fields = ('user__username', 'username', 'first_name', 'last_name')
-    list_filter = ('user__is_active',)
-
-    def username(self, obj):
-        return obj.user.username
-
-    def full_name(self, obj):
-        return obj.full_name()
-
-    username.short_description = 'Username'
-    full_name.short_description = 'Full Name'
-
-admin.site.register(Profile, ProfileAdmin)
-
-
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('author', 'series', 'rating')
     list_filter = ('rating', 'series')
@@ -45,7 +24,6 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Review, ReviewAdmin)
-
 
 
 class ReplyInline(admin.StackedInline):
@@ -60,3 +38,10 @@ class ThreadAdmin(admin.ModelAdmin):
 admin.site.register(Thread, ThreadAdmin)
 admin.site.register(Reply)
 
+
+class EpisodeAdmin(admin.ModelAdmin):
+    list_display = ('series', 'episode_number')
+    list_filter = ('series__name',)
+    search_fields = ('title', 'description', 'series__name')
+
+admin.site.register(Episode, EpisodeAdmin)
