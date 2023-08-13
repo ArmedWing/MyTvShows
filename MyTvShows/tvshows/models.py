@@ -145,7 +145,6 @@ class Genre(models.Model):
         null=True,
     )
 
-
 class Episode(models.Model):
     series = models.ForeignKey(
         Show,
