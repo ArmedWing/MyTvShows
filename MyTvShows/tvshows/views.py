@@ -1,14 +1,15 @@
-from django.contrib.auth import  login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import  AuthenticationForm
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import F
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
+
 from django.urls import reverse_lazy
 from django.views import generic, View
-from django.views.generic import CreateView, UpdateView, DetailView
+from django.views.generic import CreateView, DetailView
 from imdb import IMDb
 
 from MyTvShows.tvshows.forms import ShowCreateForm, ShowDeleteForm, ShowEditForm, \
@@ -494,3 +495,6 @@ def view_thread(request, thread_id):
 
     return render(request, 'view_thread.html', context)
 
+
+def custom_404(request, exception):
+    return render(request, 'core/custom_404_template.html', status=404)
