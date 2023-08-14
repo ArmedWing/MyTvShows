@@ -158,27 +158,15 @@ class Episode(models.Model):
         editable=True,
     )
 
-    title = models.CharField(
-        max_length=30,
-        null=True,
-        blank=True,
-    )
-
-    description = models.TextField(
-        null=True,
-        blank=True
-    )
-
     duration = models.IntegerField(
         null=True,
         blank=True,
         editable=True,
     )
 
-    episode_number = models.PositiveIntegerField()
-
     def __str__(self):
-        return self.episode_number
+        return f"{self.series}"
+
 
 class Season(models.Model):
     series = models.ForeignKey(
@@ -203,7 +191,11 @@ class Thread(models.Model):
         max_length=200
     )
 
-    content = models.TextField()
+    content = models.TextField(
+        null=False,
+        blank=False
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True
     )

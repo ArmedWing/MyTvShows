@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.urls import reverse_lazy
+
 from django.views import generic, View
 from django.views.generic import CreateView, DetailView
 from imdb import IMDb
@@ -143,8 +144,11 @@ class ShowDetailsView(DetailView):
     model = Show
     def dispatch(self, request, *args, **kwargs):
         self.show = self.get_object(queryset=None)
-        if request.user != self.show.user:
-            return redirect('index')
+
+        if not request.user.is_superuser:
+            if request.user != self.show.user:
+                return redirect('index')
+
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
