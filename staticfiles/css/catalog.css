@@ -382,14 +382,24 @@ input[type=text]:hover {
 .card-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    margin-top: 20px;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    overflow: auto;
 }
 
+/* Styles for each card */
 .card {
-    width: 23%; /* Approximately 25% width to fit 4 cards in a row */
-    margin: 0 1%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: calc(25% - 20px);
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    height: 635px;
 }
 
 /*@media (min-width: 768px) {*/
@@ -400,12 +410,15 @@ input[type=text]:hover {
 /*}*/
 
 .card img {
-    width: 100%;
+    max-width: 100%;
     height: auto;
 }
 
 .card-content {
     padding: 10px;
+    flex: 1; /* Allow the content to expand and fill remaining space */
+    display: flex;
+    flex-direction: column;
 }
 
 .card-title {
@@ -418,15 +431,14 @@ input[type=text]:hover {
 }
 
 .card-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    text-align: center;
+     margin-top: auto; /* Push the button to the bottom of the card */
+    padding: 5px 10px;
     background-color: #007bff;
     color: #fff;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
+
 }
 
 .card-button:hover {

@@ -17,12 +17,15 @@ def search_tv_show(request):
         response = requests.get(omdb_url)
         search_data = response.json()
 
+
         for result in search_data.get('Search', []):
             omdb_details_url = f'https://www.omdbapi.com/?i={result.get("imdbID")}&apikey=52155298'
             details_response = requests.get(omdb_details_url)
             details_data = details_response.json()
+            # print(details_data)
 
             total_seasons = details_data.get('totalSeasons', 'N/A')
+            genre = details_data.get('Genre', 'N/A')
 
             if total_seasons != 'N/A':
                 num_seasons = int(total_seasons)
@@ -34,6 +37,7 @@ def search_tv_show(request):
                 year=result.get('Year'),
                 imdb_id=result.get('imdbID'),
                 poster=result.get('Poster'),
+                genre=genre,
                 seasons=num_seasons,  # Assign the calculated value
             )
 
@@ -42,6 +46,7 @@ def search_tv_show(request):
                 'year': result.get('Year'),
                 'imdb_id': result.get('imdbID'),
                 'poster': result.get('Poster'),
+                'genre': genre,
                 'seasons': num_seasons,
             })
 
@@ -60,7 +65,9 @@ def add_to_favorites(request, imdb_id):
             'title': search_result.title,
             'year': search_result.year,
             'poster': search_result.poster,
+            'genre': search_result.genre,
             'seasons': search_result.seasons
+
         }
     )
 

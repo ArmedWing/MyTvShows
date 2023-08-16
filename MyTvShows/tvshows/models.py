@@ -236,6 +236,7 @@ class TVShow(models.Model):
     imdb_id = models.CharField(max_length=20, unique=True)
     poster = models.URLField(max_length=200)
     seasons = models.PositiveIntegerField()
+    genre = models.CharField(max_length=100)
 
     def __str__(self):
         return self.title
@@ -248,6 +249,7 @@ class TemporarySearchResult(models.Model):
     imdb_id = models.CharField(max_length=20)
     poster = models.URLField(max_length=200)
     seasons = models.PositiveIntegerField()
+    genre = models.CharField(max_length=100)
 
     def __str__(self):
         return self.title
