@@ -1,16 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-<head>
-    <title>Series Detail</title>
-</head>
-<body>
-    <h2>Your Saved TV Shows</h2>
-<ul>
-    {% for saved_show in saved_shows %}
-    <li>{{ saved_show.title }} ({{ saved_show.year }})</li>
-    {% endfor %}
-</ul>
 
-</body>
+<h2>Your Saved TV Shows</h2>
+<div class="card-container">
+    {% for saved_show in saved_shows %}
+    <div class="card">
+        <img src="{{ saved_show.poster }}" alt="{{ saved_show.title }} Poster" style="max-height: 330px">
+        <div class="card-content">
+            <h3 class="card-title">{{ saved_show.title }}</h3>
+            <p class="card-text">{{ saved_show.year }}</p>
+            <p class="card-text">Number of Seasons: {{ saved_show.num_seasons }}</p>
+            <p class="card-text">Genre: {{ saved_show.genre }}</p>
+            <p class="card-text">Episodes watched: {{ saved_show.episodes_watched }}</p>
+            <a href="{% url 'show_details' saved_show.pk %}" class="btn btn-primary">View Details</a>
+            <form method="post" action="{% url 'increase_counter' saved_show.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="card-button">Increase Episodes Watched</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 
 {% endblock %}

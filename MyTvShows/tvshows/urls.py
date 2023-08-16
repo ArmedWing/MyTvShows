@@ -1,8 +1,8 @@
 from django.urls import path, include
 from MyTvShows.tvshows import views
-from MyTvShows.tvshows.views import index, delete_show, \
+from MyTvShows.tvshows.views import index, \
     delete_profile, RegisterView, LoginUserView, LogoutUserView, profile_info, update_profile, AddShowReview, \
-    AddShowView, ShowDetailsView, users_Info, shows_info, create_thread, create_reply, EditShowView
+   users_Info,  create_thread, create_reply
 
 urlpatterns = (
     path('', index, name='index'),
@@ -11,7 +11,7 @@ urlpatterns = (
     path('login/', LoginUserView.as_view(), name='login_user'),
     path('logout/', LogoutUserView.as_view(), name='logout_user'),
     path('users-info/', users_Info, name='users_info'),
-    path('shows-info/', shows_info, name='shows_info'),
+    # path('shows-info/', shows_info, name='shows_info'),
     path('create-thread/', create_thread, name='create_thread'),
     path('create-reply/<int:thread_id>/', create_reply, name='create_reply'),
     path('thread/', views.thread_detail, name='thread_detail'),
@@ -21,11 +21,11 @@ urlpatterns = (
 
 
     path('show/', include([
-        path('add/', AddShowView.as_view(), name='add_show'),
-        path('details/<int:pk>/', ShowDetailsView.as_view(), name='details_show'),
-        path('edit/<int:pk>/', EditShowView.as_view(), name='edit_show'),
-        path('delete/<int:pk>/', delete_show, name='delete_show'),
-        path('increase_counter/<int:pk>/', views.IncreaseCounter, name='Increase-Counter'),
+        # path('add/', AddShowView.as_view(), name='add_show'),
+        # path('details/<int:pk>/', ShowDetailsView.as_view(), name='details_show'),
+        # path('edit/<int:pk>/', EditShowView.as_view(), name='edit_show'),
+        # path('delete/<int:pk>/', delete_show, name='delete_show'),
+        # path('increase_counter/<int:pk>/', views.IncreaseCounter, name='Increase-Counter'),
         path('review/<int:pk>/', AddShowReview.as_view(), name='add_review'),
         path('delete_review/<int:pk>/', views.DeleteReview, name='DeleteReview'),
 

@@ -13,10 +13,10 @@ from django.views import generic, View
 from django.views.generic import CreateView, DetailView
 from imdb import IMDb
 
-from MyTvShows.tvshows.forms import ShowCreateForm, ShowDeleteForm, ShowEditForm, \
-    ProfileEditForm, ShowReviewForm, ShowGenreForm, ShowSeasonForm, ShowEpisodesForm, ThreadForm, ReplyForm, \
+from MyTvShows.tvshows.forms import  \
+    ProfileEditForm, ShowReviewForm,  ThreadForm, ReplyForm, \
     UserEditForm, CustomUserCreationForm
-from MyTvShows.tvshows.models import Show, Profile, Review, Genre, Season, Episode, Thread, Reply
+from MyTvShows.tvshows.models import Profile, Review, Thread, Reply
 
 
 class RegisterView(View):
@@ -87,175 +87,14 @@ def DeleteReview(request, pk):
     return redirect('details_show', pk=show_id)
 
 
-class AddShowView(View):
-    def get(self, request):
-        form = ShowCreateForm()
-        genre = ShowGenreForm()
-        seasons = ShowSeasonForm()
-        episodes = ShowEpisodesForm()
-
-        context = {
-            'form': form,
-            'genre': genre,
-            'seasons': seasons,
-            'episodes': episodes,
-        }
-
-        return render(request, 'shows/add-show.html', context)
-
-    def post(self, request):
-        form = ShowCreateForm(request.POST)
-        genre = ShowGenreForm(request.POST)
-        seasons = ShowSeasonForm(request.POST)
-        episodes = ShowEpisodesForm(request.POST)
-
-        if form.is_valid() and genre.is_valid() and seasons.is_valid() and episodes.is_valid():
-            show = form.save(commit=False)
-            show.user_id = request.user.id
-            show.save()
-
-            genre_obj = genre.save(commit=False)
-            genre_obj.series_id = show.pk
-            genre_obj.save()
-
-            seasons_obj = seasons.save(commit=False)
-            seasons_obj.series_id = show.pk
-            seasons_obj.save()
-
-            episodes_obj = episodes.save(commit=False)
-            episodes_obj.series_id = show.pk
-            episodes_obj.save()
-
-            return redirect('index')
-
-        context = {
-            'form': form,
-            'genre': genre,
-            'seasons': seasons,
-            'episodes': episodes,
-        }
-
-        return render(request, 'shows/add-show.html', context)
 
 
 
 
-class ShowDetailsView(DetailView):
-    model = Show
-    def dispatch(self, request, *args, **kwargs):
-        self.show = self.get_object(queryset=None)
-
-        if not request.user.is_superuser:
-            if request.user != self.show.user:
-                return redirect('index')
-
-        return super().dispatch(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-
-        review = Review.objects.filter(series_id=self.show.pk).first()
-        reviews = Review.objects.filter(series_id=self.show.pk)
-
-        show_genre = Genre.objects.filter(series_id=self.show.pk).first()
-        genre = self.show.genre_set.first()
-
-        show_season = Season.objects.filter(series_id=self.show.pk).first()
-        season = self.show.season_set.first()
-
-        show_episode = Episode.objects.filter(series_id=self.show.pk).first()
-        episode = self.show.episode_set.first()
-
-        context = {
-            'show': self.show,
-            'review': review,
-            'reviews': reviews,
-            'show_genre': show_genre,
-            'genre': genre,
-            'show_season': show_season,
-            'season': season,
-            'show_episode': show_episode,
-            'episode': episode,
-        }
-
-        return render(request, 'shows/show-details.html', context)
 
 
 
-class EditShowView(View):
-    def get(self, request, pk):
-        current_user = get_user(request)
-        profile = get_profile(current_user)
-        show = get_object_or_404(Show, pk=pk)
 
-        form = ShowEditForm(instance=show)
-        genre = ShowGenreForm()
-        seasons_instance = get_object_or_404(Season, series_id=pk)
-        seasons = ShowSeasonForm(instance=seasons_instance)
-        episodes_instance = get_object_or_404(Episode, series_id=pk)
-        episodes = ShowEpisodesForm(instance=episodes_instance)
-
-        context = {
-            'profile': profile,
-            'form': form,
-            'show': show,
-            'genre': genre,
-            'seasons': seasons,
-            'episodes': episodes,
-        }
-
-        return render(request, 'shows/edit-show.html', context)
-
-    def post(self, request, pk):
-        current_user = get_user(request)
-        profile = get_profile(current_user)
-        show = get_object_or_404(Show, pk=pk)
-
-        form = ShowEditForm(request.POST, instance=show)
-        genre = ShowGenreForm(request.POST)
-        seasons_instance = get_object_or_404(Season, series_id=pk)
-        seasons = ShowSeasonForm(request.POST, instance=seasons_instance)
-        episodes_instance = get_object_or_404(Episode, series_id=pk)
-        episodes = ShowEpisodesForm(request.POST, instance=episodes_instance)
-
-        if form.is_valid() and genre.is_valid() and seasons.is_valid():
-            form.save()
-
-            genre = genre.save(commit=False)
-            genre.series_id = show.pk
-            genre.save()
-
-            seasons = seasons.save(commit=False)
-            seasons.series_id = show.pk
-            seasons.save()
-
-            episodes = episodes.save(commit=False)
-            episodes.series_id = show.pk
-            episodes.save()
-
-            return redirect('details_show', pk=show.pk)
-
-        context = {
-            'profile': profile,
-            'form': form,
-            'show': show,
-            'genre': genre,
-            'seasons': seasons,
-            'episodes': episodes,
-        }
-
-        return render(request, 'shows/edit-show.html', context)
-
-
-def IncreaseCounter(request, pk):
-    episode = get_episode(pk)
-    Episode.objects.filter(pk=episode.pk).update(episodes_watched=F("episodes_watched") + 1)
-    episode.refresh_from_db()
-
-    return redirect('details_show', pk=pk)
-
-
-def get_episode(pk):
-    return Episode.objects.filter(series_id=pk).get()
 
 
 def get_profile(user):
@@ -267,16 +106,10 @@ def get_user(request):
     return current_user
 
 
-def get_shows(request):
-    if request.user.is_authenticated:
-        return Show.objects.filter(user=request.user).order_by('pk')
-    else:
-        return Show.objects.none()
 
 
 
-def get_show(pk):
-    return Show.objects.filter(pk=pk).get()
+
 
 
 def get_review(pk):
@@ -298,36 +131,17 @@ def users_Info(request):
     return render(request, 'core/users-info.html', context)
 
 
-def shows_info(request):
-    is_admin = request.user.is_superuser
-    shows = Show.objects.all()
 
-    paginator = Paginator(shows, 4)
-    page = request.GET.get('page')
-    try:
-        shows_page = paginator.page(page)
-    except PageNotAnInteger:
-        shows_page = paginator.page(1)
-    except EmptyPage:
-        shows_page = paginator.page(paginator.num_pages)
-
-    context = {
-        'is_admin': is_admin,
-        'shows': shows,
-        'shows_page': shows_page,
-    }
-
-    return render(request, 'core/shows-info.html', context)
 
 def index(request):
     ia = IMDb()
     latest_tv_shows = ia.get_keyword('Marvel', results=5)
     latest_tv_show_titles = [show['title'] for show in latest_tv_shows]
 
-    shows = get_shows(request)
+    # shows = get_shows(request)
     episodes = Episode.objects.all()
 
-    paginator = Paginator(shows, 4)
+    # paginator = Paginator(shows, 4)
     page = request.GET.get('page')
     try:
         shows_page = paginator.page(page)
@@ -355,11 +169,11 @@ def index(request):
 def profile_info(request):
     current_user = get_user(request)
     profile = get_profile(current_user)
-    shows = get_shows(request)
+    # shows = get_shows(request)
 
     context = {
         'profile': profile,
-        'shows_length': len(shows),
+        # 'shows_length': len(shows),
     }
 
     return render(request, 'profile/profile-details.html', context)
@@ -376,26 +190,6 @@ def update_profile(request):
     return render(request, 'update_profile.html', {'form': form})
 
 
-def delete_show(request, pk):
-    current_user = get_user(request)
-    profile = get_profile(current_user)
-    show = get_show(pk)
-
-    if request.method == 'GET':
-        form = ShowDeleteForm(instance=show)
-    else:
-        form = ShowDeleteForm(request.POST, instance=show)
-        if form.is_valid():
-            form.save()
-            return redirect('index')
-
-    context = {
-        'profile': profile,
-        'show': show,
-        'form': form,
-    }
-
-    return render(request, 'shows/delete-show.html', context)
 
 
 def details_profile(request):
@@ -412,11 +206,11 @@ def details_profile(request):
 def delete_profile(request):
     current_user = get_user(request)
     profile = get_profile(current_user)
-    shows = get_shows(request)
+    # shows = get_shows(request)
 
     if request.method == 'GET':
         profile.delete()
-        shows.delete()
+        # shows.delete()
         return redirect('index')
 
     context = {

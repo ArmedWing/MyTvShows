@@ -1,8 +1,7 @@
 from django.contrib import admin
-
 from django.forms import TextInput, Textarea
 from django.db import models
-from MyTvShows.tvshows.models import Show, Review, Thread, Reply, Episode, Genre
+from MyTvShows.tvshows.models import Review, Thread, Reply
 
 admin.site.site_title = "My Custom Admin"
 admin.site.site_header = "Welcome to My Custom Admin"
@@ -20,12 +19,12 @@ class ShowAdmin(admin.ModelAdmin):
         models.CharField: {'widget': TextInput(attrs={'size': '20'})},
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
     }
-
-admin.site.register(Show, ShowAdmin)
+#
+# admin.site.register(Show, ShowAdmin)
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('author', 'series', 'rating')
-    list_filter = ('rating', 'series')
+    list_display = ('author', 'rating')
+    list_filter = ('rating',)
     search_fields = ('author__username', 'series__name')
 
 
@@ -41,12 +40,12 @@ class ThreadAdmin(admin.ModelAdmin):
 
 admin.site.register(Thread, ThreadAdmin)
 
-class EpisodeAdmin(admin.ModelAdmin):
-    list_display = ('series', 'episodes_watched')
-    list_filter = ('series__name',)
-    search_fields = ('title', 'description')
-
-admin.site.register(Episode, EpisodeAdmin)
+# class EpisodeAdmin(admin.ModelAdmin):
+#     list_display = ('series', 'episodes_watched')
+#     list_filter = ('series__name',)
+#     search_fields = ('title', 'description')
+#
+# admin.site.register(Episode, EpisodeAdmin)
 
 
 class ReplyAdmin(admin.ModelAdmin):

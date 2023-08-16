@@ -2,6 +2,7 @@ import requests
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 
 from ..tvshows.models import TVShow, TemporarySearchResult
 
@@ -22,7 +23,7 @@ def search_tv_show(request):
             omdb_details_url = f'https://www.omdbapi.com/?i={result.get("imdbID")}&apikey=52155298'
             details_response = requests.get(omdb_details_url)
             details_data = details_response.json()
-            # print(details_data)
+            print(details_data)
 
             total_seasons = details_data.get('totalSeasons', 'N/A')
             genre = details_data.get('Genre', 'N/A')
@@ -82,10 +83,24 @@ def add_to_favorites(request, imdb_id):
     search_result.delete()
     TemporarySearchResult.objects.all().delete()
 
-    return redirect('search_tv_show')
+    return redirect('series_detail')
 
 
 @login_required
 def saved_shows(request):
     saved_shows = TVShow.objects.all()
     return render(request, 'shows/series_details.html', {'saved_shows': saved_shows})
+
+
+def increase_counter(request, pk):
+    tv_show = get_object_or_404(TVShow, pk=pk)
+    tv_show.episodes_watched += 1
+    tv_show.save()
+
+    return redirect(reverse('series_detail'))
+
+
+def show_details(request, pk):
+    tv_show = get_object_or_404(TVShow, pk=pk)
+    return render(request, 'shows/show_details.html', {'tv_show': tv_show})
+
