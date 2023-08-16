@@ -9,6 +9,7 @@ handler404 = custom_404
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('MyTvShows.tvshows.urls')),
+    path('', include('MyTvShows.seriesapi.urls')),
     # path('auth/', include('MyTvShows.tvshows.urls')),
 
 ]

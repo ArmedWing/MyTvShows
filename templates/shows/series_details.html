@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <title>Series Detail</title>
+</head>
+<body>
+    <h2>Your Saved TV Shows</h2>
+<ul>
+    {% for saved_show in saved_shows %}
+    <li>{{ saved_show.title }} ({{ saved_show.year }})</li>
+    {% endfor %}
+</ul>
+
+</body>
+
+{% endblock %}

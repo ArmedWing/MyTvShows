@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<h2>Search TV Shows</h2>
+<form method="get" action="{% url 'search_tv_show' %}">
+    <input type="text" name="query" placeholder="Search TV shows">
+    <button type="submit">Search</button>
+</form>
+
+<div class="card-container">
+    {% for result in search_results %}
+    <div class="card">
+        <img src="{{ result.poster }}" alt="{{ result.title }} Poster">
+        <div class="card-content">
+            <h3 class="card-title">{{ result.title }}</h3>
+            <p class="card-text">{{ result.year }}</p>
+            <p class="card-text">Number of Seasons: {{ result.seasons }}</p>
+            <form method="post" action="{% url 'add_to_favorites' result.imdb_id %}">
+                {% csrf_token %}
+                <button type="submit" class="card-button">Save to Favorites</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+

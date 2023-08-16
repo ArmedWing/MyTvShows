@@ -27,6 +27,8 @@
 
             {% elif request.user.is_superuser %}
                 <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'search_tv_show' %}">Search</a>
+                <a href="{% url 'series_detail' %}">Saved Shows</a>
                 <a href="{% url 'add_show' %}">Add Show</a>
                 <a href="{% url 'thread_detail' %}">Forum</a>
                 <a href="{% url 'create_thread' %}">Create Thread</a>
@@ -40,6 +42,8 @@
 {#            {% if user.is_authenticated and not user.is_superuser %}#}
                 {% else %}
                 <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'search_tv_show' %}">Search</a>
+                <a href="{% url 'series_detail' %}">Saved Shows</a>
                 <a href="{% url 'add_show' %}">Add Show</a>
                 <a href="{% url 'thread_detail' %}">Forum</a>
                 <a href="{% url 'create_thread' %}">Create Thread</a>

@@ -35,6 +35,7 @@ admin.site.register(Review, ReviewAdmin)
 class ThreadAdmin(admin.ModelAdmin):
     list_display = ('title', 'content', 'author', 'created_at')
     search_fields = ('title', 'author__username')
+
     date_hierarchy = 'created_at'
 
 
@@ -42,11 +43,8 @@ admin.site.register(Thread, ThreadAdmin)
 
 class EpisodeAdmin(admin.ModelAdmin):
     list_display = ('series', 'episodes_watched')
-    # list_filter = ('series__name',)
+    list_filter = ('series__name',)
     search_fields = ('title', 'description')
-
-    # def __str__(self):
-    #     return self.title
 
 admin.site.register(Episode, EpisodeAdmin)
 

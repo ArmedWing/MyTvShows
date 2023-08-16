@@ -379,6 +379,56 @@ input[type=text]:hover {
     margin: 0 2px;
 }
 
-/*.shows-info-div {*/
-/*    margin: 20px auto;*/
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: 20px;
+}
+
+.card {
+    width: 23%; /* Approximately 25% width to fit 4 cards in a row */
+    margin: 0 1%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/*@media (min-width: 768px) {*/
+/*    .card {*/
+/*        width: calc(25% - 20px); !* 25% width to show 4 cards per column on screens wider than 768px *!*/
+/*        margin: 0 10px;*/
+/*    }*/
 /*}*/
+
+.card img {
+    width: 100%;
+    height: auto;
+}
+
+.card-content {
+    padding: 10px;
+}
+
+.card-title {
+    font-size: 18px;
+    margin: 0;
+}
+
+.card-text {
+    margin: 5px 0;
+}
+
+.card-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.card-button:hover {
+    background-color: #0056b3;
+}
