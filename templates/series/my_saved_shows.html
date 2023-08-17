@@ -9,9 +9,10 @@
         <div class="card-content">
             <h3 class="card-title">{{ saved_show.title }}</h3>
             <p class="card-text">{{ saved_show.year }}</p>
-            <p class="card-text">Number of Seasons: {{ saved_show.num_seasons }}</p>
+            <p class="card-text">Number of Seasons: {{ saved_show.seasons }}</p>
             <p class="card-text">Genre: {{ saved_show.genre }}</p>
             <p class="card-text">Episodes watched: {{ saved_show.episodes_watched }}</p>
+            <p class="card-text">Description: {{ saved_show.description | striptags | truncatechars:85 }}</p>
             <a href="{% url 'show_details' saved_show.pk %}" class="btn btn-primary">View Details</a>
             <form method="post" action="{% url 'increase_counter' saved_show.pk %}">
                 {% csrf_token %}

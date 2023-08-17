@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{#<h2>{{ tv_show.title }} Details</h2>#}
+<div class="card" style="height: 870px; margin-bottom: 100px; margin-top: 25px">
+    <h2 class="card-title">{{ tv_show.title }}</h2>
+    <img src="{{ tv_show.poster }}" alt="{{ tv_show.title }} Poster">
+    <div class="card-content">
+        <p class="card-text">Year: {{ tv_show.year }}</p>
+        <p class="card-text">Number of Seasons: {{ tv_show.seasons }}</p>
+        <p class="card-text">Genre: {{ tv_show.genre }}</p>
+        <p class="card-text">Episodes Watched: {{ tv_show.episodes_watched }}</p>
+        <p class="card-text">Description: {{ tv_show.description | striptags }}</p>
+        <form method="post" action="{% url 'increase_counter' tv_show.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="card-button">Increase Episodes Watched</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

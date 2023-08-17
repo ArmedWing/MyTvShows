@@ -400,7 +400,7 @@ input[type=text]:hover {
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
-    height: 680px;
+    height: 800px;
 }
 
 /*@media (min-width: 768px) {*/
@@ -423,8 +423,9 @@ input[type=text]:hover {
 }
 
 .card-title {
-    font-size: 18px;
+    font-size: 24px;
     margin: 0;
+    padding-bottom: 10px;
 }
 
 .card-text {
@@ -432,7 +433,7 @@ input[type=text]:hover {
 }
 
 .card-button {
-     margin-top: auto; /* Push the button to the bottom of the card */
+    margin-top: auto; /* Push the button to the bottom of the card */
     padding: 5px 10px;
     background-color: #007bff;
     color: #fff;
@@ -443,5 +444,168 @@ input[type=text]:hover {
 }
 
 .card-button:hover {
+    background-color: #0056b3;
+}
+
+.card a {
+    margin-top: auto; /* Push the button to the bottom of the card */
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+
+}
+
+.card a:hover {
+    background-color: #0056b3;
+}
+
+
+.thread-li .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 100px;
+}
+
+.thread-li .btn-danger {
+    color: white;
+    background-color: #dc3545;
+}
+
+.thread-li .btn-secondary {
+    color: white;
+    background-color: #007bff;
+}
+
+.thread-li .btn:hover {
+    text-decoration: underline;
+}
+
+#box > div > div > ul > li:nth-child(n) > form > button{
+    color: white;
+    background-color: #dc3545;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+#box > div > div > ul > li:nth-child(n) > form > button:hover {
+    text-decoration: underline;
+}
+
+.user-card-box {
+    width: 350px; /* Adjust the width as needed */
+    text-align: center;
+    border: 2px solid dodgerblue;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px; /* Add some margin to separate cards */
+    background-color: #f8f9fa; /* Add a background color */
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.user-card-box h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    border-bottom: 1px solid dimgrey;
+    color: #333;
+    font-weight: bold;
+}
+
+.user-card-box p {
+    margin: 5px 0;
+    border-bottom: 2px solid grey;
+}
+
+.remove {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    background-color: #007bff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.remove:hover {
+    background-color: #0056b3;
+}
+
+.user-card-container {
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.user-card-box a {
+    color: white;
+    background-color: #007bff;
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px; /* Add some margin above the buttons */
+}
+
+
+.search-container {
+    text-align: center;
+    margin: 20px auto;
+}
+
+.search-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-input {
+    width: 1000px;
+    padding: 8px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+.search-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
     background-color: #0056b3;
 }

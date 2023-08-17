@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-        <div class="threads-info">
+        <div class="threads-info" style="padding-bottom: 100px">
             <h1>Thread Review</h1>
             {% if threads %}
                 <ul class="thread-ul">
@@ -13,6 +13,7 @@
                         <h4>{{ thread.content }}</h4>
                         <p>Created at: {{ thread.created_at }}</p>
                         <a href="{% url 'view_thread' thread.id %}">View Thread</a>
+                        <a href="{% url 'delete_thread' thread.id %}">Delete Thread</a>
                     </li>
                     {% endfor %}
                 </ul>

@@ -1,22 +1,17 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import  AuthenticationForm
-
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import F
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
-
-from django.urls import reverse_lazy
-
+from django.utils.decorators import method_decorator
 from django.views import generic, View
-from django.views.generic import CreateView, DetailView
+from django.views.generic import ListView
 from imdb import IMDb
-
 from MyTvShows.tvshows.forms import  \
-    ProfileEditForm, ShowReviewForm,  ThreadForm, ReplyForm, \
+    ProfileEditForm, ThreadForm, ReplyForm, \
     UserEditForm, CustomUserCreationForm
-from MyTvShows.tvshows.models import Profile, Review, Thread, Reply
+from MyTvShows.tvshows.models import Profile, Review, Thread, Reply, TVShow
 
 
 class RegisterView(View):
@@ -56,45 +51,61 @@ class LogoutUserView(generic.View):
         return redirect('index')
 
 
-class AddShowReview(CreateView):
-    model = Review
-    form_class = ShowReviewForm
-    template_name = 'shows/add-review.html'
-    context_object_name = 'show'
+@method_decorator(login_required, name='dispatch')
+class UsersInfoListView(ListView):
+    template_name = 'core/users-info.html'
+    context_object_name = 'users'
+    ordering = 'pk'
+
+
+    def get_queryset(self):
+        current_user = self.request.user
+        return User.objects.exclude(pk=current_user.pk).order_by(self.ordering)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pk = self.kwargs['pk']
-        context['show'] = Show.objects.filter(pk=pk).first()
+        context['is_admin'] = self.request.user.is_superuser
+        context['current_user'] = self.request.user
+        context['users'] = User.objects.annotate(shows_count=Count('tvshow')).exclude(pk=context['current_user'].pk)
         return context
 
-    def form_valid(self, form):
-        pk = self.kwargs['pk']
-        form.instance.series_id = pk
-        return super().form_valid(form)
 
-    def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse_lazy('details_show', kwargs={'pk': pk})
+class CreateThreadView(View):
+    template_name = 'forum/create_thread.html'
 
+    def get(self, request, *args, **kwargs):
+        form = ThreadForm()
+        return render(request, self.template_name, {'form': form})
 
-def DeleteReview(request, pk):
-    review = get_review(pk)
-    review = get_object_or_404(Review, id=review.id)
-    show_id = review.series_id
-    review.delete()
-
-    return redirect('details_show', pk=show_id)
-
+    def post(self, request, *args, **kwargs):
+        form = ThreadForm(request.POST)
+        if form.is_valid():
+            thread = form.save(commit=False)
+            thread.author = request.user
+            thread.save()
+            return redirect('thread_detail')
+        return render(request, self.template_name, {'form': form})
 
 
+class ThreadDeleteView(View):
+    template_name = 'forum/delete_thread.html'
+
+    def get(self, request, thread_id, *args, **kwargs):
+        thread = get_object_or_404(Thread, id=thread_id)
+        return render(request, self.template_name, {'thread': thread})
+
+    def post(self, request, thread_id, *args, **kwargs):
+        thread = get_object_or_404(Thread, id=thread_id)
+        thread.delete()
+        return redirect('thread_detail')
 
 
-
-
-
-
-
+class DeleteReplyView(View):
+    def post(self, request, reply_id):
+        reply = get_object_or_404(Reply, pk=reply_id)
+        thread_id = reply.thread.pk  # Save the thread ID before deleting the reply
+        reply.delete()
+        return redirect('view_thread', thread_id)
 
 
 def get_profile(user):
@@ -106,59 +117,15 @@ def get_user(request):
     return current_user
 
 
-
-
-
-
-
-
 def get_review(pk):
     return Review.objects.filter(pk=pk).get()
-
-
-def users_Info(request):
-    is_admin = request.user.is_superuser
-
-    current_user = request.user
-    users = User.objects.exclude(pk=current_user.pk).order_by('pk')  # Exclude the logged-in user
-
-    context = {
-        'is_admin': is_admin,
-        'current_user': current_user,
-        'users': users,
-    }
-
-    return render(request, 'core/users-info.html', context)
-
-
 
 
 def index(request):
     ia = IMDb()
     latest_tv_shows = ia.get_keyword('Marvel', results=5)
     latest_tv_show_titles = [show['title'] for show in latest_tv_shows]
-
-    # shows = get_shows(request)
-    episodes = Episode.objects.all()
-
-    # paginator = Paginator(shows, 4)
-    page = request.GET.get('page')
-    try:
-        shows_page = paginator.page(page)
-    except PageNotAnInteger:
-        shows_page = paginator.page(1)
-    except EmptyPage:
-        shows_page = paginator.page(paginator.num_pages)
-
-    current_user = request.user
-    users = User.objects.exclude(pk=current_user.pk)  # Exclude the logged-in user
-
     context = {
-        'shows_page': shows_page,
-        'shows': shows,
-        'current_user': current_user,
-        'users': users,
-        'episodes': episodes,
         'latest_tv_show_titles': latest_tv_show_titles,
     }
 
@@ -169,11 +136,11 @@ def index(request):
 def profile_info(request):
     current_user = get_user(request)
     profile = get_profile(current_user)
-    # shows = get_shows(request)
+    shows = TVShow.objects.filter(user=request.user)
 
     context = {
         'profile': profile,
-        # 'shows_length': len(shows),
+        'shows_length': len(shows),
     }
 
     return render(request, 'profile/profile-details.html', context)
@@ -187,9 +154,7 @@ def update_profile(request):
             return redirect('details_profile')
     else:
         form = ProfileEditForm(instance=request.user)
-    return render(request, 'update_profile.html', {'form': form})
-
-
+    return render(request, 'profile/update_profile.html', {'form': form})
 
 
 def details_profile(request):
@@ -206,11 +171,11 @@ def details_profile(request):
 def delete_profile(request):
     current_user = get_user(request)
     profile = get_profile(current_user)
-    # shows = get_shows(request)
+    shows = TVShow.objects.filter(user=request.user)
 
     if request.method == 'GET':
         profile.delete()
-        # shows.delete()
+        shows.delete()
         return redirect('index')
 
     context = {
@@ -243,21 +208,7 @@ def edit_user(request, user_id):
             'user': user,
         }
 
-        return render(request, 'edit_user.html', context)
-
-
-def create_thread(request):
-    if request.method == 'POST':
-        form = ThreadForm(request.POST)
-        if form.is_valid():
-            thread = form.save(commit=False)
-            thread.author = request.user
-            thread.save()
-            return redirect('thread_detail')
-    else:
-        form = ThreadForm()
-
-    return render(request, 'create_thread.html', {'form': form})
+        return render(request, 'profile/edit_user.html', context)
 
 
 def create_reply(request, thread_id):
@@ -274,12 +225,12 @@ def create_reply(request, thread_id):
     else:
         form = ReplyForm()
 
-    return render(request, 'create_reply.html', {'form': form, 'thread': thread})
+    return render(request, 'forum/create_reply.html', {'form': form, 'thread': thread})
 
 
 def thread_detail(request):
     threads = Thread.objects.all()
-    return render(request, 'thread_detail.html', {'threads': threads})
+    return render(request, 'forum/thread_detail.html', {'threads': threads})
 
 
 def view_thread(request, thread_id):
@@ -291,7 +242,7 @@ def view_thread(request, thread_id):
         'replies': replies,
     }
 
-    return render(request, 'view_thread.html', context)
+    return render(request, 'forum/view_thread.html', context)
 
 
 def custom_404(request, exception):

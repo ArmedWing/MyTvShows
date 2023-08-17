@@ -3,11 +3,14 @@
 
 {% block content %}
 
-<h2>Search TV Shows</h2>
-<form method="get" action="{% url 'search_tv_show' %}">
-    <input type="text" name="query" placeholder="Search TV shows">
-    <button type="submit">Search</button>
-</form>
+<div class="search-container">
+    <h2>Search TV Shows</h2>
+    <form class="search-form" method="get" action="{% url 'search_tv_show' %}">
+        <input class="search-input" type="text" name="query" placeholder="Search TV shows">
+        <button class="search-button" type="submit">Search</button>
+    </form>
+</div>
+
 
 <div class="card-container">
     {% for result in search_results %}
@@ -18,7 +21,8 @@
             <p class="card-text">{{ result.year }}</p>
             <p class="card-text">Number of Seasons: {{ result.seasons }}</p>
             <p class="card-text">Genre: {{ result.genre }}</p>
-            <form method="post" action="{% url 'add_to_favorites' result.imdb_id %}">
+            <p class="card-text">Description: {{ result.description | striptags | truncatechars:85}}</p>
+            <form method="post" action="{% url 'add_to_favorites' result.tvmaze_id %}">
                 {% csrf_token %}
                 <button type="submit" class="card-button">Save to Favorites</button>
             </form>

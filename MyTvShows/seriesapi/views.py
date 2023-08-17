@@ -1,10 +1,13 @@
-import requests
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 
 from ..tvshows.models import TVShow, TemporarySearchResult
+
+import requests
+from django.shortcuts import render
 
 
 def search_tv_show(request):
@@ -14,61 +17,73 @@ def search_tv_show(request):
     if search_query:
         TemporarySearchResult.objects.all().delete()
 
-        omdb_url = f'https://www.omdbapi.com/?s={search_query}&type=series&apikey=52155298'
-        response = requests.get(omdb_url)
+        tvmaze_url = f'https://api.tvmaze.com/search/shows?q={search_query}'
+        response = requests.get(tvmaze_url)
         search_data = response.json()
 
+        for result in search_data:
+            show = result.get('show', {})
+            genres = show.get('genres', [])
+            premiered = show.get('premiered')
+            description = show.get('summary', '')
 
-        for result in search_data.get('Search', []):
-            omdb_details_url = f'https://www.omdbapi.com/?i={result.get("imdbID")}&apikey=52155298'
-            details_response = requests.get(omdb_details_url)
-            details_data = details_response.json()
-            print(details_data)
+            tvmaze_id = show.get('id')
+            num_seasons = len(get_show_seasons(tvmaze_id))  # Call the previous function
 
-            total_seasons = details_data.get('totalSeasons', 'N/A')
-            genre = details_data.get('Genre', 'N/A')
+            # Get the poster image URL if available, or set it to an empty string if not
+            poster_data = show.get('image')
+            poster = poster_data.get('medium') if poster_data else ''
 
-            if total_seasons != 'N/A':
-                num_seasons = int(total_seasons)
-            else:
-                num_seasons = 0
-
-            TemporarySearchResult.objects.create(
-                title=result.get('Title'),
-                year=result.get('Year'),
-                imdb_id=result.get('imdbID'),
-                poster=result.get('Poster'),
-                genre=genre,
-                seasons=num_seasons,  # Assign the calculated value
+            # Create a TemporarySearchResult instance
+            temp_search_result = TemporarySearchResult.objects.create(
+                title=show.get('name'),
+                year=premiered if premiered else 'N/A',
+                tvmaze_id=tvmaze_id,
+                poster=poster,
+                genre=', '.join(genres),
+                seasons=num_seasons,
+                description=description,
             )
 
             search_results.append({
-                'title': result.get('Title'),
-                'year': result.get('Year'),
-                'imdb_id': result.get('imdbID'),
-                'poster': result.get('Poster'),
-                'genre': genre,
+                'title': show.get('name'),
+                'year': premiered if premiered else 'N/A',
+                'tvmaze_id': tvmaze_id,
+                'poster': poster,
+                'genre': ', '.join(genres),
                 'seasons': num_seasons,
+                'description': description,
             })
 
-    return render(request, 'shows/series_search.html', {'search_results': search_results})
+    return render(request, 'series/series_search.html', {'search_results': search_results})
+
+
+
+def get_show_seasons(tvmaze_id):
+    seasons_url = f'https://api.tvmaze.com/shows/{tvmaze_id}/seasons'
+    response = requests.get(seasons_url)
+    return response.json()
+
+
 
 
 @login_required
-def add_to_favorites(request, imdb_id):
+def add_to_favorites(request, tvmaze_id):
     # Get the selected TV show from the temporary table
-    search_result = get_object_or_404(TemporarySearchResult, imdb_id=imdb_id)
+    search_result = get_object_or_404(TemporarySearchResult, tvmaze_id=tvmaze_id)
+    user = request.user
 
     # Create or get the TV show from the TVShow model
     tv_show, created = TVShow.objects.get_or_create(
-        imdb_id=search_result.imdb_id,
+        tvmaze_id=search_result.tvmaze_id,
+        user=user,
         defaults={
             'title': search_result.title,
             'year': search_result.year,
             'poster': search_result.poster,
             'genre': search_result.genre,
-            'seasons': search_result.seasons
-
+            'seasons': search_result.seasons,
+            'description': search_result.description,
         }
     )
 
@@ -79,7 +94,7 @@ def add_to_favorites(request, imdb_id):
         # The TV show was already in the user's favorites
         messages.warning(request, f'{search_result.title} is already in your favorites.')
 
-    # Delete all TV shows from the temporary table
+    # Delete the selected TV show from the temporary table
     search_result.delete()
     TemporarySearchResult.objects.all().delete()
 
@@ -88,8 +103,8 @@ def add_to_favorites(request, imdb_id):
 
 @login_required
 def saved_shows(request):
-    saved_shows = TVShow.objects.all()
-    return render(request, 'shows/series_details.html', {'saved_shows': saved_shows})
+    saved_shows = TVShow.objects.filter(user=request.user).order_by('id')
+    return render(request, 'series/my_saved_shows.html', {'saved_shows': saved_shows})
 
 
 def increase_counter(request, pk):
@@ -102,5 +117,5 @@ def increase_counter(request, pk):
 
 def show_details(request, pk):
     tv_show = get_object_or_404(TVShow, pk=pk)
-    return render(request, 'shows/show_details.html', {'tv_show': tv_show})
+    return render(request, 'series/series_details.html', {'tv_show': tv_show})
 

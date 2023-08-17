@@ -2,18 +2,18 @@
 {% block content %}
     {% if is_admin %}
         <h1 style="text-align: center">All Users Info</h1>
-        <ul>
+        <div class="user-card-container">
             {% for user in users %}
-                <div class="card-box">
+                <div class="user-card-box">
                     <h2>Profile Information</h2>
                     <p>Username: {{ user.username }}</p>
                     <p>First Name: {{ user.first_name }}</p>
                     <p>Last Name: {{ user.last_name }}</p>
+                    <p>Shows added: {{ user.shows_count }}</p>
                     <a href="{% url 'edit_user' user.id %}" class="remove">Edit</a>
                     <a href="{% url 'delete_user' user.id %}" class="remove">Delete</a>
                 </div>
-
             {% endfor %}
-        </ul>
+        </div>
     {% endif %}
 {% endblock %}
