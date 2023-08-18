@@ -1,7 +1,6 @@
-from django.contrib.auth import forms, get_user_model
-from django.core.validators import MinLengthValidator
+from django.contrib.auth import get_user_model
+from django.core.validators import MinLengthValidator, MinValueValidator, MaxValueValidator
 from django.db import models
-from django.urls import reverse
 from MyTvShows.tvshows.validators import check_name_capital_letter
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, AbstractUser
@@ -47,27 +46,8 @@ class Profile(models.Model):
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
-
-class Review(models.Model):
-    author = models.CharField(
-        max_length=30,
-        null=False,
-        blank=False,
-    )
-
-    rating = models.IntegerField(
-        null=False,
-        blank=False,
-        editable=True,
-    )
-
-    comment = models.TextField(
-        null=False,
-        blank=False,
-    )
-
-    def get_absolute_url(self):
-        return reverse('index')
+    def __str__(self):
+        return self.username
 
 
 class Thread(models.Model):
@@ -153,5 +133,24 @@ class TemporarySearchResult(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Rating(models.Model):
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE,
+        null=True,
+        unique=False,
+    )
+    tv_show = models.ForeignKey(
+        TVShow,
+        on_delete=models.CASCADE,
+    )
+    rating_value = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+
+    def __str__(self):
+        return f"{self.user} - {self.tv_show.title}: {self.rating_value}"
 
 

@@ -20,11 +20,12 @@
                     <h3>Author: {{ reply.author }}</h3>
                     <h4>{{ reply.content }}</h4>
                     <p>Created at: {{ thread.created_at }}</p>
-
-                    <form method="post" action="{% url 'delete_reply' reply.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Delete</button>
-                    </form>
+                    {% if request.user.is_admin or request.user.id == reply.author_id %}
+                        <form method="post" action="{% url 'delete_reply' reply.pk %}">
+                            {% csrf_token %}
+                            <button type="submit">Delete Reply</button>
+                        </form>
+                    {% endif %}
 
                 </li>
                 {% endfor %}

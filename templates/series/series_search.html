@@ -21,6 +21,9 @@
             <p class="card-text">{{ result.year }}</p>
             <p class="card-text">Number of Seasons: {{ result.seasons }}</p>
             <p class="card-text">Genre: {{ result.genre }}</p>
+
+            <p class="card-text">Average User Rating: {{ result.average_rating }}</p>
+
             <p class="card-text">Description: {{ result.description | striptags | truncatechars:85}}</p>
             <form method="post" action="{% url 'add_to_favorites' result.tvmaze_id %}">
                 {% csrf_token %}

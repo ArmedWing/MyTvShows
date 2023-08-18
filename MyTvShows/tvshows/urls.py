@@ -13,12 +13,14 @@ urlpatterns = (
     path('users-info/', UsersInfoListView.as_view(), name='users_info'),
     path('create-thread/', CreateThreadView.as_view(), name='create_thread'),
     path('create-reply/<int:thread_id>/', CreateReplyView.as_view(), name='create_reply'),
-    path('delete_reply/<int:reply_id>/', DeleteReplyView.as_view(), name='delete_reply'),
+    path('delete_reply/<int:pk>/', DeleteReplyView.as_view(), name='delete_reply'),
     path('thread/', views.thread_detail, name='thread_detail'),
     path('thread/view_thread/<int:thread_id>/', views.view_thread, name='view_thread'),
     path('delete_thread/<int:thread_id>/', ThreadDeleteView.as_view(), name='delete_thread'),
     path('delete-user/<int:user_id>/', views.delete_user, name='delete_user'),
     path('edit-user/<int:user_id>/', views.edit_user, name='edit_user'),
+
+    path('add_rating/<int:tv_show_id>/', views.add_rating, name='add_rating'),
 
 
     path('profile/', include([

@@ -13,7 +13,9 @@
                         <h4>{{ thread.content }}</h4>
                         <p>Created at: {{ thread.created_at }}</p>
                         <a href="{% url 'view_thread' thread.id %}">View Thread</a>
+                        {% if request.user.is_admin or request.user.id == thread.author_id %}
                         <a href="{% url 'delete_thread' thread.id %}">Delete Thread</a>
+                        {% endif %}
                     </li>
                     {% endfor %}
                 </ul>

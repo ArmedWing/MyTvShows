@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{#<h2>{{ tv_show.title }} Details</h2>#}
-<div class="card" style="height: 870px; margin-bottom: 100px; margin-top: 25px">
+<div class="card" style="height: 930px; margin-bottom: 100px; margin-top: 25px">
     <h2 class="card-title">{{ tv_show.title }}</h2>
     <img src="{{ tv_show.poster }}" alt="{{ tv_show.title }} Poster">
     <div class="card-content">
@@ -11,9 +10,29 @@
         <p class="card-text">Genre: {{ tv_show.genre }}</p>
         <p class="card-text">Episodes Watched: {{ tv_show.episodes_watched }}</p>
         <p class="card-text">Description: {{ tv_show.description | striptags }}</p>
+
+        <h3>Rate this TV Show</h3>
+        {% if current_rating %}
+            <p>Current Rating: {{ current_rating|default:'No ratings yet' }}</p>
+        {% else %}
+            <p>You haven't rated this TV show yet.</p>
+
+        <form method="post" action="{% url 'add_rating' tv_show.id %}">
+            {% csrf_token %}
+            <label for="rating_value">Rate this TV Show (1-10):</label>
+            <input type="number" name="rating_value" min="1" max="10" required
+                   value="{{ ratings }}">
+            <button type="submit">Submit Rating</button>
+        </form>
+        {% endif %}
+
         <form method="post" action="{% url 'increase_counter' tv_show.pk %}">
             {% csrf_token %}
             <button type="submit" class="card-button">Increase Episodes Watched</button>
+        </form>
+        <form method="post" action="{% url 'delete_show' tv_show.tvmaze_id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn show-delete-btn-danger">Delete</button>
         </form>
     </div>
 </div>

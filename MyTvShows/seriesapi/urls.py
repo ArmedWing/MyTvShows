@@ -1,5 +1,6 @@
 from django.urls import path
-from MyTvShows.seriesapi.views import saved_shows, show_details, increase_counter, add_to_favorites, search_tv_show
+from MyTvShows.seriesapi.views import saved_shows, show_details, increase_counter, add_to_favorites, search_tv_show, \
+    DeleteShowView
 
 urlpatterns = [
     path('series_detail/', saved_shows, name='series_detail'),
@@ -7,5 +8,6 @@ urlpatterns = [
     path('series_search/', search_tv_show, name='search_tv_show'),
     path('show/increase_counter/<int:pk>/', increase_counter, name='increase_counter'),
     path('show/more_details/<int:pk>/', show_details, name='show_details'),
+    path('delete-show/<int:tvmaze_id>/', DeleteShowView.as_view(), name='delete_show'),
 
 ]

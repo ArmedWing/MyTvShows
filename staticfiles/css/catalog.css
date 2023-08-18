@@ -200,6 +200,7 @@ input[type=text]:hover {
     font-size: 22px;
 
 }
+
 .albumInfo .episodes-watched{
     display: flex;
     margin-right: 490px;
@@ -269,7 +270,6 @@ input[type=text]:hover {
 .thread-li a:hover {
     text-decoration: underline;
 }
-
 
 .threads-view  {
     margin: 20px;
@@ -609,4 +609,26 @@ input[type=text]:hover {
 
 .search-button:hover {
     background-color: #0056b3;
+}
+
+
+.card-content .show-delete-btn-danger {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 100px;
+    color: white;
+    background-color: #dc3545;
+    margin-left: 80px;
+}
+
+.messages {
+    text-align: center;
+    font-size: 30px;
 }

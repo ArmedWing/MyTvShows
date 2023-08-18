@@ -8,7 +8,5 @@ class SeriesSerializer(serializers.Serializer):
     Poster = serializers.URLField()
     Season = serializers.CharField()
     Genre = serializers.CharField()
-    # Add more fields as needed
-
     class Meta:
         fields = ('Title', 'Year', 'imdbID', 'Poster', 'season', 'genre')  # List the fields you want to include in the response

@@ -3,15 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import generic, View
 from django.views.generic import ListView
 from imdb import IMDb
-from MyTvShows.tvshows.forms import  \
+from MyTvShows.tvshows.forms import \
     ProfileEditForm, ThreadForm, ReplyForm, \
-    UserEditForm, CustomUserCreationForm
-from MyTvShows.tvshows.models import Profile, Review, Thread, Reply, TVShow
+    UserEditForm, CustomUserCreationForm, AddRatingForm
+from MyTvShows.tvshows.models import Profile, Thread, Reply, TVShow, Rating
 
 
 class RegisterView(View):
@@ -24,7 +25,7 @@ class RegisterView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('index')
+            return redirect('series_detail')
         return render(request, 'user_auth/register.html', {'form': form})
 
 
@@ -39,7 +40,7 @@ class LoginUserView(generic.View):
             user = form.get_user()
             login(request, user)
             if user.is_superuser:
-                return redirect('users_info')
+                return redirect('series_detail')
             else:
                 return redirect('index')
         return render(request, 'user_auth/login.html', {'form': form})
@@ -122,9 +123,9 @@ class CreateReplyView(View):
 
 
 class DeleteReplyView(View):
-    def post(self, request, reply_id):
-        reply = get_object_or_404(Reply, pk=reply_id)
-        thread_id = reply.thread.pk  # Save the thread ID before deleting the reply
+    def post(self, request, pk):
+        reply = get_object_or_404(Reply, pk=pk)
+        thread_id = reply.thread_id  # Save the thread ID before deleting the reply
         reply.delete()
         return redirect('view_thread', thread_id)
 
@@ -136,10 +137,6 @@ def get_profile(user):
 def get_user(request):
     current_user = request.user
     return current_user
-
-
-def get_review(pk):
-    return Review.objects.filter(pk=pk).get()
 
 
 def index(request):
@@ -251,3 +248,22 @@ def view_thread(request, thread_id):
 
 def custom_404(request, exception):
     return render(request, 'core/custom_404_template.html', status=404)
+
+
+def add_rating(request, tv_show_id):
+    if request.method == 'POST':
+        user = request.user
+        rating_value = int(request.POST.get('rating_value'))  # Extract rating_value from the form
+        existing_rating = Rating.objects.filter(user=user, tv_show_id=tv_show_id).first()
+
+        if existing_rating:
+            existing_rating.rating_value = rating_value
+            existing_rating.save()
+        else:
+            tv_show = get_object_or_404(TVShow, id=tv_show_id)
+            rating = Rating(user=user, tv_show=tv_show, rating_value=rating_value)
+            rating.save()
+
+        return redirect('show_details', tv_show_id)
+    else:
+        return HttpResponseBadRequest("Invalid request method.")

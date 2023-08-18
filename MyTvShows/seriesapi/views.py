@@ -1,10 +1,11 @@
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Avg
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
+from django.views import View
 
-from ..tvshows.models import TVShow, TemporarySearchResult
+from ..tvshows.models import TVShow, TemporarySearchResult, Rating
 
 import requests
 from django.shortcuts import render
@@ -13,6 +14,7 @@ from django.shortcuts import render
 def search_tv_show(request):
     search_query = request.GET.get('query')
     search_results = []
+
 
     if search_query:
         TemporarySearchResult.objects.all().delete()
@@ -34,6 +36,9 @@ def search_tv_show(request):
             poster_data = show.get('image')
             poster = poster_data.get('medium') if poster_data else ''
 
+            average_rating = Rating.objects.filter(tv_show__tvmaze_id=tvmaze_id).aggregate(Avg('rating_value'))[
+                'rating_value__avg']
+
             # Create a TemporarySearchResult instance
             temp_search_result = TemporarySearchResult.objects.create(
                 title=show.get('name'),
@@ -42,7 +47,7 @@ def search_tv_show(request):
                 poster=poster,
                 genre=', '.join(genres),
                 seasons=num_seasons,
-                description=description,
+                description=description if description else 'No description available',
             )
 
             search_results.append({
@@ -53,18 +58,15 @@ def search_tv_show(request):
                 'genre': ', '.join(genres),
                 'seasons': num_seasons,
                 'description': description,
+                'average_rating': average_rating if average_rating else 'No ratings yet',
             })
 
     return render(request, 'series/series_search.html', {'search_results': search_results})
-
-
 
 def get_show_seasons(tvmaze_id):
     seasons_url = f'https://api.tvmaze.com/shows/{tvmaze_id}/seasons'
     response = requests.get(seasons_url)
     return response.json()
-
-
 
 
 @login_required
@@ -106,16 +108,21 @@ def saved_shows(request):
     saved_shows = TVShow.objects.filter(user=request.user).order_by('id')
     return render(request, 'series/my_saved_shows.html', {'saved_shows': saved_shows})
 
-
 def increase_counter(request, pk):
     tv_show = get_object_or_404(TVShow, pk=pk)
     tv_show.episodes_watched += 1
     tv_show.save()
-
     return redirect(reverse('series_detail'))
-
 
 def show_details(request, pk):
     tv_show = get_object_or_404(TVShow, pk=pk)
-    return render(request, 'series/series_details.html', {'tv_show': tv_show})
+    current_rating = tv_show.rating_set.aggregate(Avg('rating_value'))['rating_value__avg']
+
+    return render(request, 'series/series_details.html', {'tv_show': tv_show, 'current_rating': current_rating})
+
+class DeleteShowView(View):
+    def post(self, request, tvmaze_id):
+        show = get_object_or_404(TVShow, tvmaze_id=tvmaze_id)
+        show.delete()
+        return redirect('series_detail')
 
