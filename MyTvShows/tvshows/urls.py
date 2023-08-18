@@ -2,7 +2,7 @@ from django.urls import path, include
 from MyTvShows.tvshows import views
 from MyTvShows.tvshows.views import index, \
     delete_profile, RegisterView, LoginUserView, LogoutUserView, profile_info, update_profile, \
-    create_reply, UsersInfoListView, CreateThreadView, ThreadDeleteView, DeleteReplyView
+    UsersInfoListView, CreateThreadView, ThreadDeleteView, DeleteReplyView, CreateReplyView
 
 urlpatterns = (
     path('', index, name='index'),
@@ -12,7 +12,7 @@ urlpatterns = (
     path('logout/', LogoutUserView.as_view(), name='logout_user'),
     path('users-info/', UsersInfoListView.as_view(), name='users_info'),
     path('create-thread/', CreateThreadView.as_view(), name='create_thread'),
-    path('create-reply/<int:thread_id>/', create_reply, name='create_reply'),
+    path('create-reply/<int:thread_id>/', CreateReplyView.as_view(), name='create_reply'),
     path('delete_reply/<int:reply_id>/', DeleteReplyView.as_view(), name='delete_reply'),
     path('thread/', views.thread_detail, name='thread_detail'),
     path('thread/view_thread/<int:thread_id>/', views.view_thread, name='view_thread'),

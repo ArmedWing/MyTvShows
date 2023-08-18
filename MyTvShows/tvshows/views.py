@@ -100,6 +100,27 @@ class ThreadDeleteView(View):
         return redirect('thread_detail')
 
 
+class CreateReplyView(View):
+    template_name = 'forum/create_reply.html'
+    form_class = ReplyForm
+
+    def get(self, request, thread_id):
+        thread = Thread.objects.get(pk=thread_id)
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form, 'thread': thread})
+
+    def post(self, request, thread_id):
+        thread = Thread.objects.get(pk=thread_id)
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.author = request.user
+            reply.thread = thread
+            reply.save()
+            return redirect('view_thread', thread_id)
+        return render(request, self.template_name, {'form': form, 'thread': thread})
+
+
 class DeleteReplyView(View):
     def post(self, request, reply_id):
         reply = get_object_or_404(Reply, pk=reply_id)
@@ -209,23 +230,6 @@ def edit_user(request, user_id):
         }
 
         return render(request, 'profile/edit_user.html', context)
-
-
-def create_reply(request, thread_id):
-    thread = Thread.objects.get(pk=thread_id)
-
-    if request.method == 'POST':
-        form = ReplyForm(request.POST)
-        if form.is_valid():
-            reply = form.save(commit=False)
-            reply.author = request.user
-            reply.thread = thread
-            reply.save()
-            return redirect('view_thread', thread_id)
-    else:
-        form = ReplyForm()
-
-    return render(request, 'forum/create_reply.html', {'form': form, 'thread': thread})
 
 
 def thread_detail(request):

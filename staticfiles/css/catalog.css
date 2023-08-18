@@ -93,7 +93,7 @@
     background: #15171b;
     display: block;
     width: 100%;
-    color: white;
+    color: black;
     transition: all 0.3s ease;
     font-size: 1.2em;
     line-height: 1;
@@ -127,7 +127,7 @@ input[type=text]:hover {
 	height: 50px;
 	cursor: pointer;
 	border: none;
-  border-radius: 10px;
+    border-radius: 10px;
 	display: inline;
 	align-items: center;
 	justify-content: center;
@@ -137,11 +137,11 @@ input[type=text]:hover {
 	background-position: left;
 	background-repeat: no-repeat;
 	transition: 500ms;
-  color: white;
+    color: white;
     font-family: "Lato", serif;
-  font-size: 20px;
-  margin-bottom: 5px;
-  margin-top: 20px;
+    font-size: 20px;
+    margin-bottom: 5px;
+    margin-top: 20px;
 }
 
 .search-result .no-result{
@@ -593,6 +593,7 @@ input[type=text]:hover {
     font-size: 16px;
     margin-bottom: 10px;
     background-color: white;
+    color: black;
 }
 
 .search-button {
