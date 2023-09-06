@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.db.models import Count
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponseServerError, Http404, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import generic, View
@@ -79,26 +79,45 @@ class CreateThreadView(View):
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = ThreadForm(request.POST)
-        if form.is_valid():
-            thread = form.save(commit=False)
-            thread.author = request.user
-            thread.save()
-            return redirect('thread_detail')
-        return render(request, self.template_name, {'form': form})
+        try:
+            form = ThreadForm(request.POST)
+            if form.is_valid():
+                thread = form.save(commit=False)
+                thread.author = request.user
+                thread.save()
+                return redirect('thread_detail')
+            else:
+                return render(request, self.template_name, {'form': form})
+
+        except Exception as e:
+            return HttpResponseServerError(f"An error occurred: {str(e)}")
 
 
 class ThreadDeleteView(View):
     template_name = 'forum/delete_thread.html'
 
     def get(self, request, thread_id, *args, **kwargs):
-        thread = get_object_or_404(Thread, id=thread_id)
-        return render(request, self.template_name, {'thread': thread})
+        try:
+            thread = get_object_or_404(Thread, id=thread_id)
+            return render(request, self.template_name, {'thread': thread})
+
+        except Http404:
+            return HttpResponseNotFound("Thread not found")
+
+        except Exception as e:
+            return HttpResponseServerError(f"An error occurred: {str(e)}")
 
     def post(self, request, thread_id, *args, **kwargs):
-        thread = get_object_or_404(Thread, id=thread_id)
-        thread.delete()
-        return redirect('thread_detail')
+        try:
+            thread = get_object_or_404(Thread, id=thread_id)
+            thread.delete()
+            return redirect('thread_detail')
+
+        except Http404:
+            return HttpResponseNotFound("Thread not found")
+
+        except Exception as e:
+            return HttpResponseServerError(f"An error occurred: {str(e)}")
 
 
 class CreateReplyView(View):
@@ -111,23 +130,35 @@ class CreateReplyView(View):
         return render(request, self.template_name, {'form': form, 'thread': thread})
 
     def post(self, request, thread_id):
-        thread = Thread.objects.get(pk=thread_id)
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            reply = form.save(commit=False)
-            reply.author = request.user
-            reply.thread = thread
-            reply.save()
-            return redirect('view_thread', thread_id)
-        return render(request, self.template_name, {'form': form, 'thread': thread})
+        try:
+            thread = Thread.objects.get(pk=thread_id)
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                reply = form.save(commit=False)
+                reply.author = request.user
+                reply.thread = thread
+                reply.save()
+                return redirect('view_thread', thread_id)
+            else:
+                return render(request, self.template_name, {'form': form, 'thread': thread})
+
+        except Exception as e:
+            return HttpResponseServerError(f"An error occurred: {str(e)}")
 
 
 class DeleteReplyView(View):
     def post(self, request, pk):
-        reply = get_object_or_404(Reply, pk=pk)
-        thread_id = reply.thread_id  # Save the thread ID before deleting the reply
-        reply.delete()
-        return redirect('view_thread', thread_id)
+        try:
+            reply = get_object_or_404(Reply, pk=pk)
+            thread_id = reply.thread_id  # Save the thread ID before deleting the reply
+            reply.delete()
+            return redirect('view_thread', thread_id)
+
+        except Http404:
+            return HttpResponseNotFound("Reply not found")
+
+        except Exception as e:
+            return HttpResponseServerError(f"An error occurred: {str(e)}")
 
 
 def get_profile(user):
@@ -252,18 +283,26 @@ def custom_404(request, exception):
 
 def add_rating(request, tv_show_id):
     if request.method == 'POST':
-        user = request.user
-        rating_value = int(request.POST.get('rating_value'))  # Extract rating_value from the form
-        existing_rating = Rating.objects.filter(user=user, tv_show_id=tv_show_id).first()
+        try:
+            user = request.user
+            rating_value = int(request.POST.get('rating_value'))  # Extract rating_value from the form
+            existing_rating = Rating.objects.filter(user=user, tv_show_id=tv_show_id).first()
 
-        if existing_rating:
-            existing_rating.rating_value = rating_value
-            existing_rating.save()
-        else:
-            tv_show = get_object_or_404(TVShow, id=tv_show_id)
-            rating = Rating(user=user, tv_show=tv_show, rating_value=rating_value)
-            rating.save()
+            if existing_rating:
+                existing_rating.rating_value = rating_value
+                existing_rating.save()
+            else:
+                tv_show = get_object_or_404(TVShow, id=tv_show_id)
+                rating = Rating(user=user, tv_show=tv_show, rating_value=rating_value)
+                rating.save()
 
-        return redirect('show_details', tv_show_id)
+            return redirect('show_details', tv_show_id)
+
+        except ValueError:
+            return HttpResponseBadRequest("Invalid rating value. Please enter a valid rating.")
+
+        except Exception as e:
+            return HttpResponseServerError(f"An error occurred: {str(e)}")
+
     else:
         return HttpResponseBadRequest("Invalid request method.")
