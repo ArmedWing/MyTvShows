@@ -23,6 +23,7 @@ def search_tv_show(request):
         response = requests.get(tvmaze_url)
         search_data = response.json()
 
+
         for result in search_data:
             show = result.get('show', {})
             genres = show.get('genres', [])
