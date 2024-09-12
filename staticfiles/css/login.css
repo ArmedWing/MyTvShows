@@ -23,6 +23,7 @@ fieldset legend {
     display: block;
     width: 100%;
     margin: 0 auto;
+
 }
 
 fieldset form{
@@ -55,6 +56,7 @@ input, input + label > i {
     width: 100%;
     color: white;
     transition: all 0.3s ease;
+    height: 40px;
 }
 
 input[type=text], input[type=number], input[type=email] {
